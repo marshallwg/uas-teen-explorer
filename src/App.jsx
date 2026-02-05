@@ -96,6 +96,7 @@ function App() {
         row[`${r.group}_ci`] = [r.ci_lower, r.ci_upper]
         row[`${r.group}_n`] = r.n
         row[`${r.group}_sd`] = r.sd
+        row[`${r.group}_pct`] = r.pct_agree
       })
       return row
     })
@@ -105,7 +106,17 @@ function App() {
     ? prepareChartData(itemData)
     : prepareChartData(scaleData)
 
-  // Custom tooltip
+  // Prepare % agreement chart data (items only)
+  const pctChartData = prepareChartData(itemData).map(row => {
+    const pctRow = { item: row.item, label: row.label }
+    groups.forEach(g => {
+      pctRow[g] = row[`${g}_pct`]
+      pctRow[`${g}_n`] = row[`${g}_n`]
+    })
+    return pctRow
+  })
+
+  // Custom tooltip for means chart
   const CustomTooltip = ({ active, payload, label }) => {
     if (!active || !payload?.length) return null
 
@@ -117,6 +128,30 @@ function App() {
             <span style={{ color: entry.color }}>{entry.name}:</span>
             <span className="tooltip-value">
               {entry.value?.toFixed(2)}
+              {entry.payload[`${entry.name}_n`] && (
+                <span className="tooltip-n">
+                  (n={entry.payload[`${entry.name}_n`]})
+                </span>
+              )}
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+
+  // Custom tooltip for % agreement chart
+  const PctTooltip = ({ active, payload, label }) => {
+    if (!active || !payload?.length) return null
+
+    return (
+      <div className="custom-tooltip">
+        <p className="tooltip-label">{label}</p>
+        {payload.map((entry, index) => (
+          <div key={index} className="tooltip-row">
+            <span style={{ color: entry.color }}>{entry.name}:</span>
+            <span className="tooltip-value">
+              {entry.value?.toFixed(1)}%
               {entry.payload[`${entry.name}_n`] && (
                 <span className="tooltip-n">
                   (n={entry.payload[`${entry.name}_n`]})
@@ -213,6 +248,49 @@ function App() {
           </div>
         </section>
 
+        {selectedView === 'items' && (
+          <section className="chart-section">
+            <h2>
+              % Agreement (4+ on scale)
+              {selectedDemographic !== 'Overall' && ` by ${selectedDemographic}`}
+            </h2>
+
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height={400}>
+                <BarChart
+                  data={pctChartData}
+                  layout="vertical"
+                  margin={{ top: 20, right: 30, left: 150, bottom: 20 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis
+                    type="number"
+                    domain={[0, 100]}
+                    tickFormatter={v => v + '%'}
+                  />
+                  <YAxis
+                    type="category"
+                    dataKey="label"
+                    width={140}
+                    tick={{ fontSize: 12 }}
+                  />
+                  <Tooltip content={<PctTooltip />} />
+                  <Legend />
+                  {groups.map((group, index) => (
+                    <Bar
+                      key={group}
+                      dataKey={group}
+                      name={group}
+                      fill={COLORS[index % COLORS.length]}
+                      barSize={groups.length > 4 ? 12 : 20}
+                    />
+                  ))}
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+        )}
+
         <section className="table-section">
           <h2>Summary Statistics</h2>
           <div className="table-container">
@@ -221,7 +299,7 @@ function App() {
                 <tr>
                   <th>Item</th>
                   {groups.map(g => (
-                    <th key={g} colSpan={3}>{g}</th>
+                    <th key={g} colSpan={selectedView === 'items' ? 4 : 3}>{g}</th>
                   ))}
                 </tr>
                 <tr>
@@ -231,6 +309,9 @@ function App() {
                       <th className="subheader">N</th>
                       <th className="subheader">Mean</th>
                       <th className="subheader">SD</th>
+                      {selectedView === 'items' && (
+                        <th className="subheader">% Agree</th>
+                      )}
                     </React.Fragment>
                   ))}
                 </tr>
@@ -250,6 +331,11 @@ function App() {
                         <td className="stat-cell">
                           {row[`${g}_sd`]?.toFixed(2) || '-'}
                         </td>
+                        {selectedView === 'items' && (
+                          <td className="stat-cell" style={{ color: '#16a34a', fontWeight: 600 }}>
+                            {row[`${g}_pct`] != null ? row[`${g}_pct`].toFixed(1) + '%' : '-'}
+                          </td>
+                        )}
                       </React.Fragment>
                     ))}
                   </tr>

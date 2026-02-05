@@ -2,8 +2,8 @@
   "items": [
     {
       "item": "q001a",
-      "label": "Reserved",
-      "full_label": "Reserved [REVERSED]"
+      "label": "Reserved (R)",
+      "full_label": "Reserved (R) [REVERSED]"
     },
     {
       "item": "q001b",
@@ -27,8 +27,8 @@
     },
     {
       "item": "q001f",
-      "label": "Lazy",
-      "full_label": "Lazy [REVERSED]"
+      "label": "Lazy (R)",
+      "full_label": "Lazy (R) [REVERSED]"
     },
     {
       "item": "q001g",
@@ -53,5 +53,5 @@
     "items": ["q001a", "q001b", "q001c", "q001d", "q001e", "q001f", "q001g", "q001h"],
     "scales": ["trait_ctt_mean", "trait_f1_score"]
   },
-  "sample_size": 462
+  "sample_size": 452
 }
