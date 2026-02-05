@@ -1,0 +1,57 @@
+{
+  "items": [
+    {
+      "item": "q001a",
+      "label": "Reserved",
+      "full_label": "Reserved [REVERSED]"
+    },
+    {
+      "item": "q001b",
+      "label": "Few artistic interests",
+      "full_label": "Few artistic interests"
+    },
+    {
+      "item": "q001c",
+      "label": "Outgoing",
+      "full_label": "Outgoing"
+    },
+    {
+      "item": "q001d",
+      "label": "Active imagination",
+      "full_label": "Active imagination"
+    },
+    {
+      "item": "q001e",
+      "label": "Trusting",
+      "full_label": "Trusting"
+    },
+    {
+      "item": "q001f",
+      "label": "Lazy",
+      "full_label": "Lazy [REVERSED]"
+    },
+    {
+      "item": "q001g",
+      "label": "Relaxed",
+      "full_label": "Relaxed"
+    },
+    {
+      "item": "q001h",
+      "label": "Does a thorough job",
+      "full_label": "Does a thorough job"
+    }
+  ],
+  "demographics": ["Overall", "Gender", "Race", "Hispanic/Latino", "Age Group"],
+  "demographic_groups": {
+    "Overall": "All",
+    "Gender": ["Female", "Male", "Other/Non-binary"],
+    "Race": ["White", "Black", "Am.Indian/AK Native", "Asian", "Pacific Islander", "Mixed"],
+    "Hispanic/Latino": ["No", "Yes"],
+    "Age Group": ["12-14", "15-17", "18+"]
+  },
+  "score_types": {
+    "items": ["q001a", "q001b", "q001c", "q001d", "q001e", "q001f", "q001g", "q001h"],
+    "scales": ["trait_ctt_mean", "trait_f1_score"]
+  },
+  "sample_size": 462
+}
